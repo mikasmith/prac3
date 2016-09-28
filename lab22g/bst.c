@@ -29,7 +29,8 @@ bst bst_insert(bst b, char *str){
         b->key= emalloc(strlen(str)+1 *sizeof str[0]);
         strcpy(b->key, str);
         
-    }  
+    }
+    
     comparison=strcmp(str, b->key);
 
     if(IN_LEFT){
@@ -42,29 +43,19 @@ bst bst_insert(bst b, char *str){
 
 int bst_search(bst b, char *key){
     int comparison;
-
-    /* If current tree null, item isn't going to be there */
     if (b == NULL) return 0;
-
-    /* Use strcmp() to check values (instead of checking chars?) */
     comparison = strcmp(key, b->key);
 
-    if (MATCH) {
+    if(MATCH){
         return 1;
-    } else if (IN_LEFT) {
+    }else if(IN_LEFT){
         return bst_search(b->left, key);
-    } else if (IN_RIGHT) {
+    }else if(IN_RIGHT){
         return bst_search(b->right, key);
-    } else {
-        /* If none of these cases work, something bad happened */
-        /* Fixes warning about potential non-returned value */
+    }else{
         exit(EXIT_FAILURE);
     }
 }
-
-
-
-
 
 void bst_inorder(bst b, void f(char *s)){
     if(b!=NULL){
@@ -86,15 +77,12 @@ void bst_preorder(bst b, void f(char *s)){
 
 bst bst_free(bst b) {
     if (b == NULL) return NULL;
-    /*free(t->freq);*/
     free(b->key);
 
     bst_free(b->left);
     bst_free(b->right);
     free(b);
 
-    /* Given header file returns a tree, but should be null after free */
-    /* Following line suppresses return type warning */
     return b;
 }
 

@@ -12,9 +12,9 @@ struct htablerec {
 };
 
 
-htable htable_new(int size) {
+htable htable_new(int size){
     int i;
-    htable result = emalloc(sizeof *result); /*declare htable, allocate memory*/
+    htable result = emalloc(sizeof *result);
     result->capacity = size;  
     result->numkeys = 0;
     result->keys = emalloc(result->capacity * sizeof result->keys[0]);
@@ -41,8 +41,7 @@ int htable_insert(htable h, char *str) {
     int rem = val % (unsigned int)h->capacity;
     int init = rem;
 
-    do{
-        
+    do{       
         if(h->keys[rem]== NULL){ 
             h->keys[rem] = emalloc((strlen(str)+1) * sizeof str[0]);
             strcpy(h->keys[rem], str);
@@ -52,7 +51,7 @@ int htable_insert(htable h, char *str) {
             rem= (rem+1)%h->capacity;
         }
     }while(rem != init);
-
+    
     return 0;
 }
 
