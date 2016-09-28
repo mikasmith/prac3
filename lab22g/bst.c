@@ -29,8 +29,7 @@ bst bst_insert(bst b, char *str){
         b->key= emalloc(strlen(str)+1 *sizeof str[0]);
         strcpy(b->key, str);
         
-    }
-    
+    }  
     comparison=strcmp(str, b->key);
 
     if(IN_LEFT){
@@ -38,9 +37,7 @@ bst bst_insert(bst b, char *str){
     }else if(IN_RIGHT){
         b->right = bst_insert(b->right, str);
     }
-
-    return b;
-    
+    return b;    
 }
 
 int bst_search(bst b, char *key){

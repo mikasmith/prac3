@@ -39,23 +39,21 @@ static unsigned int htable_word_to_int(char *word){
 int htable_insert(htable h, char *str) {
     unsigned int val = htable_word_to_int(str);
     int rem = val % (unsigned int)h->capacity;
-    int collisions=0;
-    /*To find an empty cell, increment rem while its less than capacity and either not null or not
-      a cell containing the same str value*/
-    while(collisions < h->capacity && h->keys[rem]!= NULL  && strcmp(h->keys[rem], str) != 0){
-        rem++;
-        rem = rem % h->capacity;
-        collisions++;
-    } 
-    if(h->keys[rem]== 0){ /*If the cell is empty.*/
-        h->keys[rem] = emalloc((strlen(str)+1) * sizeof str[0]);
-        strcpy(h->keys[rem], str);
-        /*h->keys[rem] = val; Insert the value*/
-        h->numkeys++; 
-        return 1;
-    }else{
-        return 0;  /*return 0 if there is no empty space and htable is full*/
-    }
+    int init = rem;
+
+    do{
+        
+        if(h->keys[rem]== NULL){ 
+            h->keys[rem] = emalloc((strlen(str)+1) * sizeof str[0]);
+            strcpy(h->keys[rem], str);
+            h->numkeys++; 
+            return 1;
+        }else if(strcmp(h->keys[rem], str) != 0){
+            rem= (rem+1)%h->capacity;
+        }
+    }while(rem != init);
+
+    return 0;
 }
 
 
@@ -73,5 +71,6 @@ void htable_free(htable h) {
     for(i=0; i < h->capacity; i++){
         free(h->keys[i]);
     }
+    free(h->keys);
     free(h);  
 }

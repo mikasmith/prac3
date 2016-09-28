@@ -32,22 +32,23 @@ void enqueue(queue q, double item) {
 }
 
 double dequeue(queue q) {
+    double result;
     if(q-> num_items > 0){
-        return q->items[q->head];
+        result = q->items[q->head];
         q->head=(q->head+1)%q->capacity;    
         q->num_items--;
+    }else{
+        return EXIT_SUCCESS;
     }
-    return EXIT_SUCCESS; 
+    
+    return result; 
 }
 
 void queue_print(queue q) {
     int i;
-    for (i = q->head; i < (q->head + q->num_items); i++) {
-        if(q->items[i]!=0){
-            printf("%.2f\n", q->items[i]);
-        }
-    }
-    
+    for (i = 0; i < q->num_items; i++) {        
+        printf("%.2f\n", q->items[(q->head+i)%q->capacity]);        
+    }    
 }
 
 void queue_print_info(queue q) {
@@ -65,10 +66,7 @@ int queue_size(queue q) {
 }
 
 queue queue_free(queue q) {
-    /*int i;
-    for(i=0; i < q->capacity; i++){
-        free(q->items[i]);
-        }*/
+    free(q->items);
     free(q);
     
     return q; 

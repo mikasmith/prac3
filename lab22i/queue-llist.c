@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "mylib.h"
 #include "queue.h"
+
 typedef struct q_item *q_item;
 
 struct q_item {
@@ -16,9 +17,10 @@ struct queue {
 };
 
 queue queue_new() {
-    int default_size = 7;
     queue result = emalloc(sizeof *result);
-    result->length = default_size; 
+    result->length = 0;
+    result->first = NULL;
+    result->last = NULL;
     return result; 
 }
 
@@ -36,21 +38,23 @@ void enqueue(queue q, double item) {
 }
 
 double dequeue(queue q) {
-    if(q-> num_items > 0){
-        return q->items[q->head];
-        q->head=(q->head+1)%q->capacity;    
-        q->num_items--;
+    double result; 
+    if(q->length > 0){
+        result= q->first->item;
+        q->first= q->first->next;    
+        q->length--;
+    }else{
+        return EXIT_SUCCESS;
     }
-    return EXIT_SUCCESS; 
+    return result; 
 }
 
 void queue_print(queue q) {
-    /* print queue contents one per line to 2 decimal places */
     int i;
+    q_item key = q->first;
     for (i = 0; i < q->length; i++) {
-        if(q->items[i]!=0){
-            printf("%.2f\n", q->items[i]);
-        }
+        printf("%.2f\n", key->item);
+        key= key->next;       
     }
 }
 
@@ -68,11 +72,14 @@ int queue_size(queue q) {
 }
 
 void queue_free_aux(q_item i) {
-    free(i); 
+    if(i!=NULL){
+        queue_free_aux(i->next);
+        free(i);
+    }     
 }
 
 queue queue_free(queue q) {
-    free(q);
-    
+    queue_free_aux(q->first);
+    free(q);    
     return q; 
 }
